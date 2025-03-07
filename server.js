@@ -1,29 +1,47 @@
-const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
+'use strict';
 
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: "*", // Cho phép tất cả các domain truy cập
-        methods: ["GET", "POST"]
+const http = require('http');
+const socket = require('socket.io');
+const server = http.createServer();
+const port = 11100;
+
+var io = socket(server, {
+    pingInterval: 10000,
+    pingTimeout: 5000
+});
+
+io.use((socket, next) => {
+    if (socket.handshake.query.token === "UNITY") {
+        next();
+    } else {
+        next(new Error("Authentication error"));
     }
 });
 
-io.on("connection", (socket) => {
-    console.log("User connected:", socket.id);
+io.on('connection', socket => {
+  console.log('connection');
 
-    socket.on("message", (data) => {
-        console.log("Received:", data);
-        io.emit("message", data);
-    });
+  setTimeout(() => {
+    socket.emit('connection', {date: new Date().getTime(), data: "Hello Unity"})
+  }, 1000);
 
-    socket.on("disconnect", () => {
-        console.log("User disconnected:", socket.id);
-    });
+  socket.on('hello', (data) => {
+    console.log('hello', data);
+    socket.emit('hello', {date: new Date().getTime(), data: data});
+  });
+
+  socket.on('spin', (data) => {
+    console.log('spin');
+    socket.emit('spin', {date: new Date().getTime(), data: data});
+  });
+
+  socket.on('class', (data) => {
+    console.log('class', data);
+    socket.emit('class', {date: new Date().getTime(), data: data});
+  });
 });
 
-server.listen(3000, () => {
-    console.log("Server is running on port 3000");
+
+server.listen(port, () => {
+  console.log('listening on *:' + port);
 });

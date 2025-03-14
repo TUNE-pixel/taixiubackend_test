@@ -18,10 +18,9 @@ app.get('/', (req, res) => {
     res.send('Server is running!');
 });
 
-http.listen(port, () => {
+server.listen(port, () => {  // Đúng là server.listen chứ không phải http.listen
     console.log(`Server is running on port ${port}`);
 });
-
 
 io.use((socket, next) => {
     if (socket.handshake.query.token === "UNITY") {

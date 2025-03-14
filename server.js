@@ -52,8 +52,3 @@ io.on('connection', socket => {
     socket.emit('class', {date: new Date().getTime(), data: data});
   });
 });
-
-
-server.listen(port, () => {
-  console.log('listening on *:' + port);
-});

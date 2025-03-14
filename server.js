@@ -4,16 +4,14 @@
 const socket = require('socket.io');
 //const server = http.createServer();
 const port = 11100;
-
-var io = socket(server, {
-    pingInterval: 10000,
-    pingTimeout: 5000
-});
-
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+
+const io = socket(http, {
+  pingInterval: 10000, // 10 giây kiểm tra kết nối
+  pingTimeout: 5000    // 5 giây timeout nếu không phản hồi
+});
 
 
 app.get('/', (req, res) => {

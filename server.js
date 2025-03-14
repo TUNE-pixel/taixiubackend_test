@@ -1,16 +1,16 @@
 'use strict';
 
-//const http = require('http');
+const http = require('http');
 const socket = require('socket.io');
-//const server = http.createServer();
-const port = 11100;
 const express = require('express');
-const app = express();
-const http = require('http').createServer(app);
 
-const io = socket(http, {
-  pingInterval: 10000, // 10 giây kiểm tra kết nối
-  pingTimeout: 5000    // 5 giây timeout nếu không phản hồi
+const app = express();
+const server = http.createServer(app); // Định nghĩa server đúng cách
+const port = 11100;
+
+const io = socket(server, {  // Sử dụng server thay vì http
+    pingInterval: 10000,
+    pingTimeout: 5000
 });
 
 

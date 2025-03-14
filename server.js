@@ -1,14 +1,29 @@
 'use strict';
 
-const http = require('http');
+//const http = require('http');
 const socket = require('socket.io');
-const server = http.createServer();
+//const server = http.createServer();
 const port = 11100;
 
 var io = socket(server, {
     pingInterval: 10000,
     pingTimeout: 5000
 });
+
+const express = require('express');
+const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+
+
+app.get('/', (req, res) => {
+    res.send('Server is running!');
+});
+
+http.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
+
 
 io.use((socket, next) => {
     if (socket.handshake.query.token === "UNITY") {
